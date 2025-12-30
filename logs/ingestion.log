@@ -1,0 +1,60 @@
+2025-12-29 16:27:17,465 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-29 16:27:20,654 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 08fafd6d-9063-4a36-bde2-a4244ca28c2e
+2025-12-29 16:27:20,656 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 3.19s. Processed 6819 records at 2138.41 records/sec
+2025-12-29 16:29:00,678 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-29 16:29:05,331 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: b8ebcb15-dc17-47eb-b436-2021f537f2bd
+2025-12-29 16:29:05,372 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 4.65s. Processed 6819 records at 1465.64 records/sec
+2025-12-29 20:49:03,184 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-29 20:49:10,248 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: bef2b832-e3a6-4d1f-9999-600c953cbb8f
+2025-12-29 20:49:10,253 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.06s. Processed 6819 records at 965.38 records/sec
+2025-12-29 20:53:26,482 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-29 20:53:33,505 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: ea07e73f-96d4-47aa-89be-140197a285ae
+2025-12-29 20:53:33,505 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.02s. Processed 6819 records at 970.96 records/sec
+2025-12-30 20:48:28,077 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 20:48:35,119 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 4b38d51f-bfcd-43c5-b7a7-7d50637986ea
+2025-12-30 20:48:35,119 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.04s. Processed 6819 records at 968.29 records/sec
+2025-12-30 21:14:16,722 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:14:24,612 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 19f65dce-4c17-47cb-b5a1-8027479f23a5
+2025-12-30 21:14:24,612 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.89s. Processed 6819 records at 864.20 records/sec
+2025-12-30 21:14:47,352 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:14:55,341 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 5fc8afb8-2276-4acb-a73d-9d99a60c7437
+2025-12-30 21:14:55,346 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.99s. Processed 6819 records at 853.55 records/sec
+2025-12-30 21:15:39,742 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:15:47,265 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 508278e1-1d0d-456f-b9a7-3a7ad655fe94
+2025-12-30 21:15:47,265 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.52s. Processed 6819 records at 906.44 records/sec
+2025-12-30 21:19:04,536 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:19:11,663 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: f64a0912-33e7-4754-9fad-b118583faa5c
+2025-12-30 21:19:11,663 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.13s. Processed 6819 records at 956.86 records/sec
+2025-12-30 21:24:26,547 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:24:33,482 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 8fbca9d4-c16a-404d-b568-55bf2a09da9e
+2025-12-30 21:24:33,485 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 6.93s. Processed 6819 records at 983.34 records/sec
+2025-12-30 21:27:16,501 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:27:23,526 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 2afe40c0-010e-428b-919e-ecbc5c076726
+2025-12-30 21:27:23,539 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.02s. Processed 6819 records at 970.80 records/sec
+2025-12-30 21:28:06,736 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:28:13,086 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 5bbf0f0c-6429-453e-abf1-a8814634df7f
+2025-12-30 21:28:13,086 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 6.35s. Processed 6819 records at 1073.75 records/sec
+2025-12-30 21:28:40,788 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:28:48,157 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: f180b109-159f-44fc-ba78-409f3f8bc18b
+2025-12-30 21:28:48,168 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 7.37s. Processed 6819 records at 925.29 records/sec
+2025-12-30 21:31:05,928 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 21:31:12,918 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: f1e87fe9-cc2c-4e5b-9d3e-ce31a17e8ef7
+2025-12-30 21:31:12,918 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 6.99s. Processed 6819 records at 975.52 records/sec
+2025-12-30 22:07:16,203 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 22:07:18,884 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: a3467bf2-d7c5-43d9-b603-73c05b85eac9
+2025-12-30 22:07:18,884 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 2.68s. Processed 6819 records at 2543.12 records/sec
+2025-12-30 22:23:52,796 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 22:23:57,198 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 1b8c0401-5504-4c77-94be-0a5da1d813ce
+2025-12-30 22:23:57,198 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 4.40s. Processed 6819 records at 1548.84 records/sec
+2025-12-30 22:27:56,059 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 22:28:02,226 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: a549d0c5-66fe-4938-8d05-a7b507f90b5e
+2025-12-30 22:28:02,230 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 6.17s. Processed 6819 records at 1105.71 records/sec
+2025-12-30 22:33:43,530 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 22:33:48,426 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 42b06b8c-e7eb-445c-b558-c3a66bddc602
+2025-12-30 22:33:48,426 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 4.90s. Processed 6819 records at 1392.91 records/sec
+2025-12-30 22:52:26,579 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 22:52:30,781 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 8776a83e-ba53-4dca-a70b-0d04b3f1ddb9
+2025-12-30 22:52:30,781 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 4.20s. Processed 6819 records at 1622.61 records/sec
+2025-12-30 23:03:28,400 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2025-12-30 23:03:32,829 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 6819 records from upload: unknown. Dataset ID: 93d2a371-892f-4be4-aa89-aaa9724a6423
+2025-12-30 23:03:32,830 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 4.43s. Processed 6819 records at 1539.39 records/sec

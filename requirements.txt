@@ -1,6 +1,14 @@
 scikit-learn
 streamlit
-numpy 
-pandas 
-matplotlib 
+numpy
+pandas
+matplotlib
 XGboost
+sqlalchemy
+requests
+pyarrow
+openpyxl
+chardet
+joblib
+seaborn
+scipy

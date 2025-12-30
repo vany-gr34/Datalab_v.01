@@ -1,7 +1,14 @@
 import pandas as pd
+import logging
 from preprocessing.scaler import NumericScaler
 from preprocessing.encoders import CategoricalEncoder
 from preprocessing.missing_values import MissingValueHandler
+from preprocessing.outliers import OutlierHandler
+import joblib
+
+logger = logging.getLogger(__name__)
+
+
 
 class Preprocessor:
     """
@@ -13,10 +20,12 @@ class Preprocessor:
                  numeric_transformers=None, 
                  categorical_transformers=None, 
                  missing_value_handler=None,
+                 outlier_handler=None,
                  skip_preprocessing=False):
         self.numeric_transformers = numeric_transformers or []
         self.categorical_transformers = categorical_transformers or []
         self.missing_value_handler = missing_value_handler
+        self.outlier_handler = outlier_handler
         self.skip_preprocessing = skip_preprocessing
 
         self.numeric_features = []
@@ -36,15 +45,28 @@ class Preprocessor:
     def fit(self, df):
         if self.skip_preprocessing:
             return  # do nothing
+        # normalize column names
+        df.columns = [str(c).strip().lower().replace(' ', '_') for c in df.columns]
 
+        # detect features after normalization
+        self.detect_feature_types(df)
+
+        # missing values
         if self.missing_value_handler:
             self.missing_value_handler.fit(df)
             df = self.missing_value_handler.transform(df)
 
+        # outliers
+        if self.outlier_handler:
+            self.outlier_handler.fit(df)
+            # do not modify df on fit; actual handling in transform
+
+        # fit numeric transformers
         for transformer in self.numeric_transformers:
             if self.numeric_features:
                 transformer.fit(df[self.numeric_features])
 
+        # fit categorical transformers
         for transformer in self.categorical_transformers:
             if self.categorical_features:
                 transformer.fit(df[self.categorical_features])
@@ -54,21 +76,59 @@ class Preprocessor:
     def transform(self, df):
         if self.skip_preprocessing:
             return df  # return raw dataframe
-
         df_transformed = df.copy()
+
+        # normalize column names to match fit
+        df_transformed.columns = [str(c).strip().lower().replace(' ', '_') for c in df_transformed.columns]
 
         if self.missing_value_handler:
             df_transformed = self.missing_value_handler.transform(df_transformed)
 
+        # outlier handling
+        if self.outlier_handler:
+            df_transformed = self.outlier_handler.transform(df_transformed)
+
+        # numeric transforms
         for transformer in self.numeric_transformers:
             if self.numeric_features:
-                df_transformed[self.numeric_features] = transformer.transform(df_transformed[self.numeric_features])
+                vals = transformer.transform(df_transformed[self.numeric_features])
+                # keep DataFrame shape
+                if hasattr(vals, 'shape') and vals.ndim == 2:
+                    df_transformed.loc[:, self.numeric_features] = vals
+                else:
+                    df_transformed.loc[:, self.numeric_features] = vals
 
+        # categorical transforms (may expand columns)
         for transformer in self.categorical_transformers:
             if self.categorical_features:
-                df_transformed[self.categorical_features] = transformer.transform(df_transformed[self.categorical_features])
+                transformed = transformer.transform(df_transformed[self.categorical_features])
+                if isinstance(transformed, pd.DataFrame):
+                    # drop original categorical cols and concat
+                    df_transformed = df_transformed.drop(columns=self.categorical_features)
+                    df_transformed = pd.concat([df_transformed, transformed.reset_index(drop=True)], axis=1)
+                elif isinstance(transformed, pd.Series):
+                    df_transformed.loc[:, transformed.name] = transformed
+                else:
+                    # numpy array with same shape
+                    df_transformed.loc[:, self.categorical_features] = transformed
 
         return df_transformed
+
+    def save_pipeline(self, path):
+        """Serialize the preprocessor (transformers and handlers) to disk."""
+        to_save = {
+            'numeric_transformers': self.numeric_transformers,
+            'categorical_transformers': self.categorical_transformers,
+            'missing_value_handler': self.missing_value_handler,
+            'outlier_handler': self.outlier_handler,
+            'numeric_features': self.numeric_features,
+            'categorical_features': self.categorical_features,
+        }
+        joblib.dump(to_save, path)
+
+    @staticmethod
+    def load_pipeline(path):
+        return joblib.load(path)
 
     def fit_transform(self, df):
         if self.skip_preprocessing:

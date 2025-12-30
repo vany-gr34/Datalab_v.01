@@ -2,7 +2,7 @@
 
 from Models.classification.logistic_regression import LogisticRegressionClassifier
 from Models.classification.knn import KNNClassifier
-from Models.classification.random_forest import RandomForestClassifier
+from Models.classification.random_forest import RandomForestClassifierModel as RandomForestClassifier
 from Models.classification.decision_tree import DecisionTreeClassifierLab
 from Models.classification.svm import SVCClassifier
 from Models.classification.naive_bayes import NaiveBayesClassifier
@@ -11,7 +11,7 @@ from Models.classification.Xgbosst import XGBoostClassifier
 
 
 from Models.Regression.LinearRegressor import LinearRegressor
-from Models.Regression.RigdeRegressor import RidgeRegressor
+from Models.Regression.RidgeRegressor import RidgeRegressor
 from Models.Regression.LassoRegressor import LassoRegressor
 from Models.Regression.PolyRegressor import PolynomialRegressor
 from Models.Regression.KnnRegressor import KNNRegressor

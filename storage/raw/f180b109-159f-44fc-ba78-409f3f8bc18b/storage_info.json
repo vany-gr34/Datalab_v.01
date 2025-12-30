@@ -1,0 +1,10 @@
+{
+  "dataset_id": "f180b109-159f-44fc-ba78-409f3f8bc18b",
+  "storage_path": "storage\\raw\\f180b109-159f-44fc-ba78-409f3f8bc18b",
+  "stored_at": "2025-12-30T21:28:44.004143",
+  "file_format": "csv",
+  "data_file": "storage\\raw\\f180b109-159f-44fc-ba78-409f3f8bc18b\\data.csv",
+  "file_size": 11358637,
+  "checksum": "51b989272d961cfbef6fabac0c6aa110",
+  "metadata_file": "storage\\raw\\f180b109-159f-44fc-ba78-409f3f8bc18b\\metadata.json"
+}

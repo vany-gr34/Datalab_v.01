@@ -36,8 +36,20 @@ class CategoricalEncoder(BaseTransformer):
             X = X.to_frame()
         elif not isinstance(X, pd.DataFrame):
             X = pd.DataFrame(X)
+        # Return a DataFrame when possible so callers can reassign columns
+        if self.method == "onehot":
+            arr = self.encoder.transform(X)
+            try:
+                cols = self.encoder.get_feature_names_out(X.columns)
+            except Exception:
+                cols = [f"{c}_{i}" for i, c in enumerate(X.columns)]
+            return pd.DataFrame(arr, columns=cols, index=X.index)
 
-        if self.method in ["onehot", "ordinal"]:
-            return self.encoder.transform(X)
-        elif self.method == "label":
-            return self.encoder.transform(X.iloc[:,0])
+        if self.method == "ordinal":
+            arr = self.encoder.transform(X)
+            # Keep same column names
+            return pd.DataFrame(arr, columns=X.columns, index=X.index)
+
+        if self.method == "label":
+            # LabelEncoder operates on single column
+            return pd.Series(self.encoder.transform(X.iloc[:,0]), index=X.index, name=X.columns[0])
