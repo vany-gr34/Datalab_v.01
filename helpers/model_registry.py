@@ -46,4 +46,25 @@ REGRESSORS = {
     "Random Forest Regressor": RandomForestRegressorLab,
     "XGBoost Regressor": XGBoostRegressor,
 }
+
+
+def get_available_models(problem_type: str):
+    """Return available models mapping for a given problem type.
+
+    Args:
+        problem_type: either 'classification' or 'regression'.
+
+    Returns:
+        dict: mapping of model display names to model classes.
+    """
+    pt = (problem_type or "").strip().lower()
+    if pt == "classification":
+        return CLASSIFIERS
+    if pt == "regression":
+        return REGRESSORS
+    # default: return both
+    combined = {}
+    combined.update(CLASSIFIERS)
+    combined.update(REGRESSORS)
+    return combined
  

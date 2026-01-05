@@ -1,20 +1,18 @@
-# TODO: Add Deployment Part to app.py using StaticHashTable
+# TODO: Extend Training Section for Structured, Explicit, and Intelligent Handling
 
-## Tasks:
-- [x] Import StaticHashTable from static_hash.py in app.py
-- [x] Initialize a StaticHashTable instance for deployments in session state
-- [x] Update the Deployment phase UI in app.py:
-  - [x] Add tab for deploying models (store trained models in hash table)
-  - [x] Add tab for querying deployed models (load and use models)
-  - [x] Add tab for exporting deployed models using ExportManager
-- [x] Ensure models are serialized properly for storage in hash table
-- [x] Add error handling for deployment operations
-- [x] Test the deployment functionality
+## 1. Enhance helpers/model_recommender.py
+- [x] Add intelligent pre-training recommendations based on dataset characteristics (size, features, types)
+- [x] Add post-training recommendation with textual justification
 
-## Completed Features:
-- Full deployment phase with three tabs: Deploy Models, Deployed Models, Export Models
-- Model storage in StaticHashTable with metadata
-- Export functionality using ExportManager (joblib, json, png formats)
-- Model deletion and management capabilities
-- Comprehensive error handling and user feedback
-- Professional UI with metrics and expandable sections
+## 2. Restructure modules/training.py
+- [x] Separate classification and regression workflows clearly
+- [x] For classification: detect binary/multi-class, warn about imbalance, show detailed metrics (accuracy, precision, recall, f1), highlight best model
+- [x] For regression: show MSE, RMSE, R2, recommend based on highest R2
+- [x] Add pre-training model recommendations section
+- [x] Add post-training recommendation with explanation
+- [x] Ensure user-friendly UI with clear labels and comparison tables
+
+## 3. Testing and Validation
+- [x] Test enhanced training interface
+- [x] Verify recommendations work correctly
+- [x] Check UI displays properly

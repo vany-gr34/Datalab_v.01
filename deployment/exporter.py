@@ -1,9 +1,3 @@
-"""
-Core export functionality for the Deployment & Exportation Phase.
-
-Handles exporting of analytical results, models, visualizations, and reports.
-"""
-
 import os
 import json
 import pandas as pd
@@ -119,7 +113,7 @@ class ExportManager:
         return str(path)
 
     def export_model(self, model, model_name: str, preprocessing_pipeline=None,
-                    metadata: Dict[str, Any] = None) -> Dict[str, str]:
+                    metadata: Dict[str, Any] = None, formats: List[str] = None) -> Dict[str, str]:
         """
         Export trained model with preprocessing pipeline and metadata.
 
@@ -128,38 +122,53 @@ class ExportManager:
             model_name: Name of the model
             preprocessing_pipeline: Preprocessing pipeline (optional)
             metadata: Additional model metadata
+            formats: List of formats to export ['joblib', 'json', 'png']
 
         Returns:
             Dict with paths to exported files
         """
+        if formats is None:
+            formats = ['joblib', 'json']
+
         base_path = self.export_dir / "models" / model_name
         base_path.mkdir(parents=True, exist_ok=True)
 
         exported_files = {}
 
-        # Export model
-        model_path = base_path / f"{model_name}.joblib"
-        joblib.dump(model, model_path)
-        exported_files['model'] = str(model_path)
+        if 'joblib' in formats:
+            # Prefer exporting the underlying fitted estimator if the provided
+            # object is a wrapper (e.g., BaseRegressor/BaseClassifier instances)
+            obj_to_dump = getattr(model, 'model', model)
 
-        # Export preprocessing pipeline if available
-        if preprocessing_pipeline:
-            pipeline_path = base_path / "preprocessing_pipeline.joblib"
-            joblib.dump(preprocessing_pipeline, pipeline_path)
-            exported_files['pipeline'] = str(pipeline_path)
+            # Export model
+            model_path = base_path / f"{model_name}.joblib"
+            joblib.dump(obj_to_dump, model_path)
+            exported_files['joblib'] = str(model_path)
 
-        # Export metadata
-        model_metadata = self._generate_metadata(
-            "model",
-            model_type=type(model).__name__,
-            **(metadata or {})
-        )
+            # Export preprocessing pipeline if available
+            if preprocessing_pipeline:
+                pipeline_path = base_path / "preprocessing_pipeline.joblib"
+                joblib.dump(preprocessing_pipeline, pipeline_path)
+                exported_files['pipeline'] = str(pipeline_path)
 
-        metadata_path = base_path / "metadata.json"
-        with open(metadata_path, 'w') as f:
-            json.dump(model_metadata, f, indent=2, default=str)
+        if 'json' in formats:
+            # Export metadata
+            model_metadata = self._generate_metadata(
+                "model",
+                model_type=type(model).__name__,
+                **(metadata or {})
+            )
 
-        exported_files['metadata'] = str(metadata_path)
+            metadata_path = base_path / "metadata.json"
+            with open(metadata_path, 'w') as f:
+                json.dump(model_metadata, f, indent=2, default=str)
+
+            exported_files['json'] = str(metadata_path)
+
+        if 'png' in formats:
+            # For models, PNG might not be applicable, but we can skip or add a placeholder
+            # Perhaps in the future, generate a model diagram or something
+            pass
 
         logger.info(f"Exported model {model_name} to {base_path}")
         return exported_files
@@ -232,8 +241,6 @@ class ExportManager:
         base_path = self.export_dir / "reports"
         base_path.mkdir(exist_ok=True)
 
-        # For now, generate JSON report
-        # TODO: Implement HTML/PDF report generation
         path = base_path / f"{filename}.json"
 
         report = {
@@ -264,10 +271,10 @@ def export_results(data: pd.DataFrame, stats: Dict[str, Any] = None,
     return results
 
 def export_model(model, model_name: str, preprocessing_pipeline=None,
-                metadata: Dict[str, Any] = None, export_dir: str = "exports") -> Dict[str, str]:
+                metadata: Dict[str, Any] = None, export_dir: str = "exports", formats: List[str] = None) -> Dict[str, str]:
     """Export trained model."""
     manager = ExportManager(export_dir)
-    return manager.export_model(model, model_name, preprocessing_pipeline, metadata)
+    return manager.export_model(model, model_name, preprocessing_pipeline, metadata, formats)
 
 def export_visualizations(visualizations: Dict[str, Any],
                          export_dir: str = "exports") -> Dict[str, str]:
