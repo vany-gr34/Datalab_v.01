@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import io
 
 from visalustsation import VisualizerManager, NumericVisualizer, CategoricalVisualizer, CorrelationVisualizer
 from helpers.viz_utils import figs_to_html
@@ -48,8 +49,8 @@ def show():
 
         with col3:
             # Color / Group By
-            color_options = ["None"] + df.columns.tolist()
-            color_feature = st.selectbox("Color / Group By (optional)", color_options, help="Feature for coloring or grouping")
+            color_options = df.columns.tolist()
+            color_feature = st.selectbox("CFeature for coloring", ["None"] + color_options, help="Feature for coloring or grouping")
 
         # Determine available plot types based on selected features
         x_type = "numeric" if x_feature in numeric_cols else "categorical" if x_feature in categorical_cols else "datetime"
@@ -57,13 +58,13 @@ def show():
 
         available_plots = []
         if x_type == "numeric":
-            available_plots.extend(["Histogram", "Box Plot"])
+            available_plots.extend(["Histogram", "Box Plot", "Violin Plot", "KDE Plot"])
             if y_type == "numeric":
                 available_plots.extend(["Scatter Plot", "Line Plot"])
             elif y_type == "categorical":
                 available_plots.append("Box Plot")
         elif x_type == "categorical":
-            available_plots.extend(["Bar Chart", "Count Plot"])
+            available_plots.extend(["Bar Chart", "Count Plot", "Pie Chart"])
             if y_type == "numeric":
                 available_plots.append("Bar Chart")
         elif x_type == "datetime":
@@ -74,6 +75,7 @@ def show():
             available_plots.append("Correlation Matrix")
             if len(numeric_cols) <= 5:
                 available_plots.append("Pair Plot")
+                available_plots.append("Scatter Matrix")
 
         if not available_plots:
             available_plots = ["Histogram", "Bar Chart"]
@@ -95,55 +97,11 @@ def show():
         else:
             agg_func = None
 
-    # Filters Section
-    with st.expander("Data Filters", expanded=False):
-        st.markdown("### Apply Filters")
-
-        # Apply sampling first
-        if sample_size < 100:
-            df_plot = df.sample(frac=sample_size/100, random_state=42)
-        else:
-            df_plot = df.copy()
-
-        # Numerical filters
-        if numeric_cols:
-            st.markdown("**Numeric Filters**")
-            num_filter_cols = st.columns(min(3, len(numeric_cols)))
-            for idx, col in enumerate(numeric_cols):
-                if col in df_plot.columns:
-                    col_non_na = df_plot[col].dropna()
-                    if col_non_na.empty:
-                        continue
-                    try:
-                        min_val = float(col_non_na.min())
-                        max_val = float(col_non_na.max())
-                    except Exception:
-                        continue
-                    if min_val != max_val:
-                        with num_filter_cols[idx % 3]:
-                            filter_range = st.slider(f"{col}", min_val, max_val, (min_val, max_val), key=f"num_{col}")
-                            if filter_range != (min_val, max_val):
-                                df_plot = df_plot[(df_plot[col] >= filter_range[0]) & (df_plot[col] <= filter_range[1])]
-
-        # Categorical filters
-        if categorical_cols:
-            st.markdown("**Categorical Filters**")
-            cat_filter_cols = st.columns(min(3, len(categorical_cols)))
-            for idx, col in enumerate(categorical_cols):
-                if col in df_plot.columns:
-                    unique_vals = df_plot[col].dropna().unique().tolist()
-                    if len(unique_vals) > 1 and len(unique_vals) <= 50:  # Only show if reasonable number of unique values
-                        with cat_filter_cols[idx % 3]:
-                            selected_vals = st.multiselect(f"{col}", unique_vals, default=unique_vals, key=f"cat_{col}")
-                            if selected_vals != unique_vals:
-                                df_plot = df_plot[df_plot[col].isin(selected_vals)]
-
-    # If no filters applied, set df_plot
-    if 'df_plot' not in locals():
-        if sample_size < 100:
-            df_plot = df.sample(frac=sample_size/100, random_state=42)
-        else:
-            df_plot = df.copy()
+    # Apply sampling
+    if sample_size < 100:
+        df_plot = df.sample(frac=sample_size/100, random_state=42)
+    else:
+        df_plot = df.copy()
 
     # Ensure numeric columns used for plotting are actual numeric dtypes (coerce when possible)
     for col in numeric_cols:
@@ -153,8 +111,42 @@ def show():
             except Exception:
                 pass
 
+    # Additional data validation for plotting
+    def validate_data_for_plot(x_feature, y_feature, x_type, y_type, plot_type):
+        """Validate data types and content before plotting to prevent common errors."""
+        errors = []
+
+        # Check if x_feature data is suitable
+        if x_feature in df_plot.columns:
+            x_data = df_plot[x_feature].dropna()
+            if x_data.empty:
+                errors.append(f"No valid data in X feature '{x_feature}' after filtering.")
+            elif x_type == "numeric" and not pd.api.types.is_numeric_dtype(x_data):
+                errors.append(f"X feature '{x_feature}' must be numeric for {plot_type}.")
+        else:
+            errors.append(f"X feature '{x_feature}' not found in data.")
+
+        # Check if y_feature data is suitable
+        if y_feature != "None" and y_feature in df_plot.columns:
+            y_data = df_plot[y_feature].dropna()
+            if y_data.empty:
+                errors.append(f"No valid data in Y feature '{y_feature}' after filtering.")
+            elif y_type == "numeric" and not pd.api.types.is_numeric_dtype(y_data):
+                errors.append(f"Y feature '{y_feature}' must be numeric for {plot_type}.")
+        elif y_feature != "None":
+            errors.append(f"Y feature '{y_feature}' not found in data.")
+
+        return errors
+
     # Generate plot
     st.subheader(f"{plot_type} of {x_feature}" + (f" vs {y_feature}" if y_feature != "None" else ""))
+
+    # Validate data before plotting
+    validation_errors = validate_data_for_plot(x_feature, y_feature, x_type, y_type, plot_type)
+    if validation_errors:
+        for error in validation_errors:
+            st.error(error)
+        st.stop()
 
     fig, ax = plt.subplots(figsize=(12, 6))
     sns.set_style("darkgrid")
@@ -184,6 +176,26 @@ def show():
                 sns.boxplot(data=df_plot, x=x_feature, y=y_feature, ax=ax)
             else:
                 st.error("Box plot configuration not supported")
+
+        elif plot_type == "Violin Plot":
+            if x_type == "numeric":
+                if y_feature == "None":
+                    sns.violinplot(data=df_plot, x=x_feature, ax=ax)
+                else:
+                    sns.violinplot(data=df_plot, x=x_feature, y=y_feature, ax=ax)
+            elif x_type == "categorical" and y_type == "numeric":
+                sns.violinplot(data=df_plot, x=x_feature, y=y_feature, ax=ax)
+            else:
+                st.error("Violin plot configuration not supported")
+
+        elif plot_type == "KDE Plot":
+            if x_type == "numeric":
+                if y_feature == "None":
+                    sns.kdeplot(data=df_plot, x=x_feature, ax=ax)
+                else:
+                    sns.kdeplot(data=df_plot, x=x_feature, y=y_feature, ax=ax)
+            else:
+                st.error("KDE plot requires numeric X feature")
 
         elif plot_type == "Scatter Plot":
             if x_type == "numeric" and y_type == "numeric":
@@ -226,13 +238,19 @@ def show():
             else:
                 st.error("Area plot requires datetime X and numeric Y features")
 
+        elif plot_type == "Pie Chart":
+            if x_type == "categorical":
+                df_plot[x_feature].value_counts().plot.pie(ax=ax, autopct='%1.1f%%')
+            else:
+                st.error("Pie chart requires categorical X feature")
+
         elif plot_type == "Correlation Matrix":
             corr_cols = numeric_cols[:10]  # Limit for readability
             corr_matrix = df_plot[corr_cols].corr()
             sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', ax=ax)
             ax.set_title("Correlation Matrix")
 
-        elif plot_type == "Pair Plot":
+        elif plot_type == "Pair Plot" or plot_type == "Scatter Matrix":
             pair_cols = numeric_cols[:4]  # Limit for performance
             if len(pair_cols) >= 2:
                 pair_df = df_plot[pair_cols].copy()
@@ -254,6 +272,12 @@ def show():
             st.pyplot(fig)
             plt.close(fig)
 
+            # Download button
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png')
+            buf.seek(0)
+            st.download_button(label="Download Plot as PNG", data=buf, file_name="plot.png", mime="image/png")
+
         # Show data info
         st.subheader("Visualization Info")
         col1, col2, col3 = st.columns(3)
@@ -265,5 +289,8 @@ def show():
             st.metric("Y Feature Type", y_type.capitalize() if y_type else "None")
 
     except Exception as e:
-        st.error(f"Error generating plot: {str(e)}")
+        if "argmin" in str(e).lower():
+            st.error("Data type issue: The selected feature may contain non-numeric data. Please ensure numeric features are selected or preprocess the data.")
+        else:
+            st.error(f"Error generating plot: {str(e)}")
         st.code(str(e))

@@ -2,7 +2,7 @@
 
 An interactive machine learning platform that automates the entire ML workflow for researchers and non-data scientists. Built with Streamlit, this platform provides an intuitive interface for data ingestion, preprocessing, model training, and deployment.
 
-## 🚀 Features
+## Features
 
 ### Data Ingestion Layer
 - **Multi-Source Support**: Ingest data from files (CSV, Excel, JSON, Parquet), databases (PostgreSQL, MySQL, SQLite), and REST APIs
@@ -18,7 +18,7 @@ An interactive machine learning platform that automates the entire ML workflow f
 - **Visualization**: Interactive charts and plots for data exploration
 - **Deployment Ready**: Export trained models for production use
 
-## 🏗️ Architecture
+## Architecture
 
 ### Data Ingestion Layer Architecture
 
@@ -77,7 +77,7 @@ class Dataset:
     created_at: datetime      # Creation timestamp
 ```
 
-## 📦 Installation
+## Installation
 
 1. Clone the repository:
 ```bash
@@ -95,7 +95,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Database Connections
 Configure database connections in your environment or configuration file:
@@ -117,7 +117,7 @@ Supported authentication methods:
 - **Bearer Token**: JWT token authentication
 - **Basic Auth**: Username/password authentication
 
-## 📊 Usage Examples
+## Usage Examples
 
 ### File Upload via Streamlit
 ```python
@@ -161,7 +161,7 @@ dataset = ingest('api', {
 })
 ```
 
-## 🔒 Security Features
+## Security Features
 
 - **Input Sanitization**: All inputs are validated and sanitized
 - **File Size Limits**: Configurable file size limits for uploads
@@ -169,14 +169,14 @@ dataset = ingest('api', {
 - **Rate Limiting**: Built-in rate limiting for API calls
 - **Error Handling**: Comprehensive error handling without exposing sensitive information
 
-## 🚀 Scalability Features
+## Scalability Features
 
 - **Chunked Processing**: Large files are processed in chunks
 - **Async Support**: Asynchronous processing for long-running operations
 - **Memory Management**: Efficient memory usage for large datasets
 - **Caching**: Intelligent caching of processed datasets
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -184,11 +184,11 @@ dataset = ingest('api', {
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with [Streamlit](https://streamlit.io/)
 - Data processing powered by [pandas](https://pandas.pydata.org/)

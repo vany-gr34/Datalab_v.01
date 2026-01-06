@@ -1,18 +1,10 @@
-# TODO: Extend Training Section for Structured, Explicit, and Intelligent Handling
+# TODO: Improve Visualization Module
 
-## 1. Enhance helpers/model_recommender.py
-- [x] Add intelligent pre-training recommendations based on dataset characteristics (size, features, types)
-- [x] Add post-training recommendation with textual justification
-
-## 2. Restructure modules/training.py
-- [x] Separate classification and regression workflows clearly
-- [x] For classification: detect binary/multi-class, warn about imbalance, show detailed metrics (accuracy, precision, recall, f1), highlight best model
-- [x] For regression: show MSE, RMSE, R2, recommend based on highest R2
-- [x] Add pre-training model recommendations section
-- [x] Add post-training recommendation with explanation
-- [x] Ensure user-friendly UI with clear labels and comparison tables
-
-## 3. Testing and Validation
-- [x] Test enhanced training interface
-- [x] Verify recommendations work correctly
-- [x] Check UI displays properly
+## Completed Tasks
+- [x] Change color selection from multiselect to selectbox for single selection.
+- [x] Remove the entire "Data Filters" expander section.
+- [x] Add "Pie Chart" to available_plots if x_type == "categorical".
+- [x] Add "Scatter Matrix" as an option (enhance Pair Plot if needed).
+- [x] Add download button for the figure as PNG after plotting.
+- [x] Enhance error handling with specific messages for dtype issues (e.g., argmin errors).
+- [x] Strengthen dtype coercion for numeric columns before plotting to prevent errors.

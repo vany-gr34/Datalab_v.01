@@ -45,17 +45,35 @@ def show():
 
                 # Determine problem type
                 if selected_problem_type == "Auto-detect":
+                    # Smart auto-detection based on data characteristics
+                    target_series = df[selected_target].dropna()
+                    unique_vals = target_series.nunique()
+                    total_samples = len(target_series)
+                    cardinality_ratio = unique_vals / total_samples if total_samples > 0 else 0
+                    
+                    # Classification criteria:
+                    # 1. Low unique values (typically 2-20 classes)
+                    # 2. Categorical/object type
+                    # 3. Low cardinality ratio (much fewer unique values than samples)
+                    
                     if selected_target in numeric_cols:
-                        st.session_state.problem_type = "regression"
-                        auto_msg = " (Auto-detected as regression)"
-                    else:
-                        unique_vals = df[selected_target].nunique()
-                        if unique_vals <= 20:  # Arbitrary threshold for classification
+                        # For numeric columns, check unique value count
+                        # Low unique values -> classification, High unique values -> regression
+                        if unique_vals <= 20 and cardinality_ratio < 0.1:
                             st.session_state.problem_type = "classification"
-                            auto_msg = " (Auto-detected as classification)"
+                            auto_msg = " (Auto-detected as classification - low unique numeric values)"
                         else:
-                            st.session_state.problem_type = "regression"  # Treat as regression if too many categories
-                            auto_msg = " (Auto-detected as regression due to many categories)"
+                            st.session_state.problem_type = "regression"
+                            auto_msg = " (Auto-detected as regression - continuous numeric values)"
+                    else:
+                        # For categorical/object columns
+                        if unique_vals <= 20:
+                            st.session_state.problem_type = "classification"
+                            auto_msg = " (Auto-detected as classification - categorical target)"
+                        else:
+                            st.session_state.problem_type = "regression"
+                            auto_msg = " (Auto-detected as regression - too many unique categories)"
+                            
                 elif selected_problem_type == "Classification":
                     st.session_state.problem_type = "classification"
                     auto_msg = " (Manually set as classification)"
@@ -70,7 +88,7 @@ def show():
         return
 
     # Pre-training Model Recommendations
-    st.subheader("🤖 Model Recommendations")
+    st.subheader("Model Recommendations")
     recommended_models = recommend_models(df, st.session_state.problem_type)
 
     col1, col2 = st.columns([2, 1])

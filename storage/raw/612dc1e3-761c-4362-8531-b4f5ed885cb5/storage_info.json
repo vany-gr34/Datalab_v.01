@@ -1,0 +1,10 @@
+{
+  "dataset_id": "612dc1e3-761c-4362-8531-b4f5ed885cb5",
+  "storage_path": "storage\\raw\\612dc1e3-761c-4362-8531-b4f5ed885cb5",
+  "stored_at": "2026-01-06T19:59:45.759647",
+  "file_format": "csv",
+  "data_file": "storage\\raw\\612dc1e3-761c-4362-8531-b4f5ed885cb5\\data.csv",
+  "file_size": 62894,
+  "checksum": "72ed7166ddd9d5d32785af6eda3ee914",
+  "metadata_file": "storage\\raw\\612dc1e3-761c-4362-8531-b4f5ed885cb5\\metadata.json"
+}

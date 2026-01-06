@@ -16,11 +16,16 @@ class CategoricalEncoder(BaseTransformer):
         elif not isinstance(X, pd.DataFrame):
             X = pd.DataFrame(X)
 
+        # Convert to string to handle mixed types and NAType
+        X = X.astype(str)
+
         if self.method == "onehot":
             self.encoder = OneHotEncoder(handle_unknown=self.handle_unknown, sparse=False)
             self.encoder.fit(X)
         elif self.method == "ordinal":
-            self.encoder = OrdinalEncoder(handle_unknown=self.handle_unknown)
+            # OrdinalEncoder does not support 'ignore'; use 'error' or 'use_encoded_value'
+            ordinal_handle_unknown = 'error' if self.handle_unknown == 'ignore' else self.handle_unknown
+            self.encoder = OrdinalEncoder(handle_unknown=ordinal_handle_unknown)
             self.encoder.fit(X)
         elif self.method == "label":
             if X.shape[1] != 1:
