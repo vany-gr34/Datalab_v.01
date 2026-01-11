@@ -22,7 +22,7 @@ def show():
         df = st.session_state.preprocessed_data
 
     # Target column selection
-    if st.session_state.target_col is None:
+    if st.session_state.target_col is None and st.session_state.problem_type != "clustering":
         st.subheader("Target Column Selection")
         numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
         categorical_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
@@ -33,14 +33,22 @@ def show():
 
             # Problem type selection
             st.subheader("Problem Type Selection")
-            problem_type_options = ["Auto-detect", "Classification", "Regression"]
+            problem_type_options = ["Auto-detect", "Classification", "Regression", "Clustering"]
             selected_problem_type = st.radio(
                 "Choose the type of machine learning problem:",
                 problem_type_options,
-                help="Auto-detect will analyze your target column to determine the problem type. You can also manually select classification or regression."
+                help="Auto-detect will analyze your target column to determine the problem type. You can also manually select classification, regression, or clustering."
             )
 
             if st.button("Set Target Column & Problem Type"):
+                # Handle clustering case - no target column needed
+                if selected_problem_type == "Clustering":
+                    st.session_state.target_col = None  # No target for clustering
+                    st.session_state.problem_type = "clustering"
+                    st.success("Problem type set to: Clustering (no target column needed)")
+                    st.rerun()
+                    return
+
                 st.session_state.target_col = selected_target
 
                 # Determine problem type
@@ -50,12 +58,12 @@ def show():
                     unique_vals = target_series.nunique()
                     total_samples = len(target_series)
                     cardinality_ratio = unique_vals / total_samples if total_samples > 0 else 0
-                    
+
                     # Classification criteria:
                     # 1. Low unique values (typically 2-20 classes)
                     # 2. Categorical/object type
                     # 3. Low cardinality ratio (much fewer unique values than samples)
-                    
+
                     if selected_target in numeric_cols:
                         # For numeric columns, check unique value count
                         # Low unique values -> classification, High unique values -> regression
@@ -73,7 +81,7 @@ def show():
                         else:
                             st.session_state.problem_type = "regression"
                             auto_msg = " (Auto-detected as regression - too many unique categories)"
-                            
+
                 elif selected_problem_type == "Classification":
                     st.session_state.problem_type = "classification"
                     auto_msg = " (Manually set as classification)"
@@ -115,41 +123,66 @@ def show():
         st.warning("Please select at least one model to train.")
         return
 
-    # Training configuration
-    col1, col2 = st.columns(2)
-    with col1:
-        test_size = st.slider("Test Size (%)", 10, 50, 20, help="Percentage of data to use for testing")
-    with col2:
-        random_state = st.number_input("Random State", value=42, help="Random seed for reproducibility")
+    # Training configuration - different for clustering
+    if st.session_state.problem_type == "clustering":
+        col1, col2 = st.columns(2)
+        with col1:
+            random_state = st.number_input("Random State", value=42, help="Random seed for reproducibility")
+        with col2:
+            st.info("Clustering doesn't require train-test split")
 
-    # Feature selection
-    all_features = [col for col in df.columns if col != st.session_state.target_col]
-    selected_features = st.multiselect(
-        "Select features for training:",
-        all_features,
-        default=all_features,
-        help="Choose which columns to use as features"
-    )
+        # Feature selection for clustering
+        all_features = df.columns.tolist()  # All columns can be features for clustering
+        selected_features = st.multiselect(
+            "Select features for clustering:",
+            all_features,
+            default=all_features,
+            help="Choose which columns to use as features for clustering"
+        )
 
-    if not selected_features:
-        st.warning("Please select at least one feature.")
-        return
+        if not selected_features:
+            st.warning("Please select at least one feature.")
+            return
 
-    # Prepare data
-    X = df[selected_features]
-    y = df[st.session_state.target_col]
-
-    # Handle missing values
-    X = X.fillna(X.mean(numeric_only=True))
-    if st.session_state.problem_type == "classification":
-        y = y.fillna(y.mode().iloc[0] if not y.mode().empty else "Unknown")
+        # Prepare data for clustering
+        X = df[selected_features]
+        X = X.fillna(X.mean(numeric_only=True))  # Handle missing values
     else:
-        y = y.fillna(y.mean())
+        # Regular supervised learning configuration
+        col1, col2 = st.columns(2)
+        with col1:
+            test_size = st.slider("Test Size (%)", 10, 50, 20, help="Percentage of data to use for testing")
+        with col2:
+            random_state = st.number_input("Random State", value=42, help="Random seed for reproducibility")
 
-    # Train-test split
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size/100, random_state=random_state
-    )
+        # Feature selection
+        all_features = [col for col in df.columns if col != st.session_state.target_col]
+        selected_features = st.multiselect(
+            "Select features for training:",
+            all_features,
+            default=all_features,
+            help="Choose which columns to use as features"
+        )
+
+        if not selected_features:
+            st.warning("Please select at least one feature.")
+            return
+
+        # Prepare data
+        X = df[selected_features]
+        y = df[st.session_state.target_col]
+
+        # Handle missing values
+        X = X.fillna(X.mean(numeric_only=True))
+        if st.session_state.problem_type == "classification":
+            y = y.fillna(y.mode().iloc[0] if not y.mode().empty else "Unknown")
+        else:
+            y = y.fillna(y.mean())
+
+        # Train-test split
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size/100, random_state=random_state
+        )
 
     if st.button("🚀 Train Models", type="primary"):
         st.session_state.trained_models = {}
@@ -166,7 +199,10 @@ def show():
                 model = model_class()
 
                 # Run model using its `run` method which returns (y_pred, metrics)
-                y_pred, model_metrics = model.run(X_train, X_test, y_train, y_test)
+                if st.session_state.problem_type == "clustering":
+                    y_pred, model_metrics = model.run(X)
+                else:
+                    y_pred, model_metrics = model.run(X_train, X_test, y_train, y_test)
 
                 # Normalize metrics for the UI so downstream code can rely on consistent keys
                 if st.session_state.problem_type == "classification":
@@ -175,6 +211,11 @@ def show():
                         "Precision": model_metrics.get("precision") or model_metrics.get("Precision"),
                         "Recall": model_metrics.get("recall") or model_metrics.get("Recall"),
                         "F1-Score": model_metrics.get("f1") or model_metrics.get("F1-Score") or model_metrics.get("f1-score")
+                    }
+                elif st.session_state.problem_type == "clustering":
+                    metrics = {
+                        "Silhouette": model_metrics.get("silhouette") or model_metrics.get("Silhouette"),
+                        "DaviesBouldin": model_metrics.get("davies_bouldin") or model_metrics.get("DaviesBouldin")
                     }
                 else:
                     mse = model_metrics.get("MSE") or model_metrics.get("mse")
@@ -186,20 +227,34 @@ def show():
                         "R2": r2
                     }
 
-                # Store trained model
-                st.session_state.trained_models[model_name] = {
-                    "model": model,
-                    "features": selected_features,
-                    "target_col": st.session_state.target_col,
-                    "problem_type": st.session_state.problem_type,
-                    "metrics": metrics,
-                    "training_info": {
-                        "test_size": test_size/100,
-                        "random_state": random_state,
-                        "n_features": len(selected_features),
-                        "n_samples": len(X_train)
+                # Store trained model - different for clustering
+                if st.session_state.problem_type == "clustering":
+                    st.session_state.trained_models[model_name] = {
+                        "model": model,
+                        "features": selected_features,
+                        "target_col": None,  # No target for clustering
+                        "problem_type": st.session_state.problem_type,
+                        "metrics": metrics,
+                        "training_info": {
+                            "random_state": random_state,
+                            "n_features": len(selected_features),
+                            "n_samples": len(X)
+                        }
                     }
-                }
+                else:
+                    st.session_state.trained_models[model_name] = {
+                        "model": model,
+                        "features": selected_features,
+                        "target_col": st.session_state.target_col,
+                        "problem_type": st.session_state.problem_type,
+                        "metrics": metrics,
+                        "training_info": {
+                            "test_size": test_size/100,
+                            "random_state": random_state,
+                            "n_features": len(selected_features),
+                            "n_samples": len(X_train)
+                        }
+                    }
 
             except Exception as e:
                 st.error(f"Error training {model_name}: {str(e)}")
@@ -212,6 +267,8 @@ def show():
     if st.session_state.trained_models:
         if st.session_state.problem_type == "classification":
             display_classification_results()
+        elif st.session_state.problem_type == "clustering":
+            display_clustering_results()
         else:
             display_regression_results()
 
@@ -294,6 +351,76 @@ def display_classification_results():
             st.write(f"**Features Used:** {', '.join(model_data['features'])}")
 
 
+def display_clustering_results():
+    """Display clustering model results with detailed metrics and analysis."""
+    st.subheader("🎯 Clustering Model Results")
+
+    # Dataset analysis
+    df = st.session_state.stored_data if st.session_state.preprocessed_data is None else st.session_state.preprocessed_data
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Total Samples", len(df))
+    with col2:
+        st.metric("Number of Features", len(df.columns))
+    with col3:
+        st.metric("Data Shape", f"{len(df)} × {len(df.columns)}")
+
+    # Model comparison table
+    st.subheader("Model Performance Comparison")
+    comparison_data = []
+    for model_name, model_data in st.session_state.trained_models.items():
+        row = {"Model": model_name}
+        row.update(model_data["metrics"])
+        comparison_data.append(row)
+
+    comparison_df = pd.DataFrame(comparison_data)
+    # For clustering, higher Silhouette and Davies-Bouldin scores are better
+    st.dataframe(comparison_df.style.highlight_max(axis=0, subset=['Silhouette']).highlight_min(axis=0, subset=['DaviesBouldin']), use_container_width=True)
+
+    # Best model recommendation with explanation
+    best_recommendation = recommend_best_model(st.session_state.trained_models, "clustering")
+    if best_recommendation:
+        st.success(f"🏆 **Recommended Model: {best_recommendation['model_name']}**")
+        st.info(best_recommendation['justification'])
+
+    # Detailed model analysis
+    st.subheader("Model Details & Analysis")
+    for model_name, model_data in st.session_state.trained_models.items():
+        with st.expander(f"🔍 {model_name} - Detailed Analysis"):
+            col1, col2 = st.columns(2)
+            with col1:
+                silhouette = model_data['metrics'].get('Silhouette')
+                if silhouette is not None:
+                    st.metric("Silhouette Score", f"{silhouette:.4f}")
+                else:
+                    st.metric("Silhouette Score", "N/A")
+            with col2:
+                db = model_data['metrics'].get('DaviesBouldin')
+                if db is not None:
+                    st.metric("Davies-Bouldin Score", f"{db:.4f}")
+                else:
+                    st.metric("Davies-Bouldin Score", "N/A")
+
+            # Performance interpretation
+            silhouette = model_data['metrics'].get('Silhouette')
+            if silhouette is not None:
+                if silhouette >= 0.7:
+                    st.success("Excellent clustering! Well-separated and cohesive clusters.")
+                elif silhouette >= 0.5:
+                    st.info("Good clustering. Reasonably separated clusters.")
+                elif silhouette >= 0.25:
+                    st.warning("Moderate clustering. Consider different preprocessing or algorithms.")
+                else:
+                    st.error("Poor clustering. Data may not have clear cluster structure.")
+            else:
+                st.warning("Silhouette score unavailable (likely single cluster or other issue).")
+
+            # Training info
+            st.write(f"**Training Details:** {model_data['training_info']['n_samples']} samples, {model_data['training_info']['n_features']} features")
+            st.write(f"**Features Used:** {', '.join(model_data['features'])}")
+
+
 def display_regression_results():
     """Display regression model results with detailed metrics and analysis."""
     st.subheader("📈 Regression Model Results")
@@ -315,7 +442,7 @@ def display_regression_results():
     st.subheader("Model Performance Comparison")
     comparison_data = []
     for model_name, model_data in st.session_state.trained_models.items():
-        row = {"Mo📈del": model_name}
+        row = {"Model": model_name}
         row.update(model_data["metrics"])
         comparison_data.append(row)
 

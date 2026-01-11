@@ -1,0 +1,62 @@
+{
+  "dataset_id": "8d40b3bd-e967-4e40-acd3-13cf5de8a535",
+  "source_type": "api",
+  "source_location": " https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true",
+  "ingestion_timestamp": "2026-01-11T11:58:23.344222",
+  "ingestion_config": {
+    "url": " https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true",
+    "method": "GET",
+    "auth_type": null,
+    "auth_config": {},
+    "json_path": "current_weather"
+  },
+  "data_info": {
+    "data": "               time  interval  temperature  ...  winddirection  is_day  weathercode\n0  2026-01-11T10:45       900         11.1  ...             57       1            1\n\n[1 rows x 7 columns]",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true",
+    "method": "GET",
+    "response_status": 200,
+    "response_headers": {
+      "Date": "Sun, 11 Jan 2026 10:58:20 GMT",
+      "Content-Type": "application/json; charset=utf-8",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Content-Encoding": "deflate"
+    }
+  },
+  "version": "1.0",
+  "status": "active",
+  "num_rows": 1,
+  "num_columns": 7,
+  "data_types": {
+    "time": "string",
+    "interval": "Int64",
+    "temperature": "Float64",
+    "windspeed": "Int64",
+    "winddirection": "Int64",
+    "is_day": "Int64",
+    "weathercode": "Int64"
+  },
+  "missing_values": {
+    "time": 0,
+    "interval": 0,
+    "temperature": 0,
+    "windspeed": 0,
+    "winddirection": 0,
+    "is_day": 0,
+    "weathercode": 0
+  },
+  "duplicate_rows": 0,
+  "constant_columns": [
+    "time",
+    "interval",
+    "temperature",
+    "windspeed",
+    "winddirection",
+    "is_day",
+    "weathercode"
+  ],
+  "potential_targets": [],
+  "file_size": "259",
+  "checksum": "3121016d5b7bba6b6730e9e1a4c54a35",
+  "created_at": "2026-01-11T11:58:23.356668"
+}

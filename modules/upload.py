@@ -76,20 +76,59 @@ def show():
             st.info("This feature is under development.")
 
     with tab3:
-        st.subheader("API Ingestion")
-        st.info("API ingestion coming soon")
+       st.subheader("API Ingestion")
 
-        # Placeholder for API configuration
-        api_url = st.text_input("API URL")
-        auth_type = st.selectbox("Authentication", ["None", "API Key", "Bearer Token", "Basic Auth"])
+       api_url = st.text_input("API URL", placeholder="https://jsonplaceholder.typicode.com/posts")
+       method = st.selectbox("HTTP Method", ["GET", "POST"])
 
-        if auth_type == "API Key":
-            api_key = st.text_input("API Key", type="password")
-        elif auth_type == "Bearer Token":
-            token = st.text_input("Bearer Token", type="password")
+       auth_ui = st.selectbox("Authentication", ["None", "API Key", "Bearer Token", "Basic Auth"])
 
-        if st.button("Fetch Data", disabled=True):
-            st.info("This feature is under development.")
+       auth_type = None
+       auth_config = {}
+       if auth_ui == "API Key":
+          auth_type = "api_key"
+          auth_config = {
+            "key_name": st.text_input("API Key Header", value="X-API-Key"),
+            "key_value": st.text_input("API Key", type="password")
+        }
+
+       elif auth_ui == "Bearer Token":
+          auth_type = "bearer"
+          auth_config = {
+            "token": st.text_input("Bearer Token", type="password")
+        }
+
+       elif auth_ui == "Basic Auth":
+          auth_type = "basic"
+          auth_config = {
+            "username": st.text_input("Username"),
+            "password": st.text_input("Password", type="password")
+        }
+
+       json_path = st.text_input("JSON Path (optional)", placeholder="data.items")
+
+       if st.button("Fetch Data"):
+           try:
+               with st.spinner("Fetching data from API..."):
+                   dataset = ingest("api", {
+                       "url": api_url,
+                       "method": method,
+                       "auth_type": auth_type,
+                       "auth_config": auth_config,
+                       "json_path": json_path or None,
+                   })
+
+                   st.session_state.stored_data = dataset.data
+                   st.session_state.current_dataset = dataset
+
+                   st.success("API data ingested successfully")
+                   st.info(f"Dataset ID: {dataset.id}")
+
+           except IngestionError as e:
+               st.error(f"Ingestion failed: {e}")
+           except Exception as e:
+               st.error(f"Unexpected error: {e}")
+
 
     with tab4:
         st.subheader("Ingestion History")

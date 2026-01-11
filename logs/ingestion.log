@@ -172,3 +172,248 @@
 2026-01-06 20:36:28,447 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
 2026-01-06 20:36:28,598 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 418 records from upload: unknown. Dataset ID: 5a6a73d4-44f6-4347-b440-04b811f5e374
 2026-01-06 20:36:28,600 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 0.15s. Processed 418 records at 2754.93 records/sec
+2026-01-11 10:46:41,570 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2026-01-11 10:46:41,710 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 891 records from upload: unknown. Dataset ID: f9ae7795-226b-41fb-a122-d7a73c901498
+2026-01-11 10:46:41,713 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 0.14s. Processed 891 records at 6386.82 records/sec
+2026-01-11 10:55:35,815 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2026-01-11 10:55:35,937 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 891 records from upload: unknown. Dataset ID: b1390e89-6796-4673-8601-71a11718ca6f
+2026-01-11 10:55:35,937 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 0.12s. Processed 891 records at 7358.59 records/sec
+2026-01-11 10:56:45,083 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2026-01-11 10:56:45,184 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 418 records from upload: unknown. Dataset ID: ebc579a6-5acd-4ae5-a550-520ef623fe68
+2026-01-11 10:56:45,184 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 0.10s. Processed 418 records at 4130.29 records/sec
+2026-01-11 11:04:10,687 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2026-01-11 11:04:10,772 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 418 records from upload: unknown. Dataset ID: 69c79ab2-4350-4d35-be97-0673c1f26c6b
+2026-01-11 11:04:10,772 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 0.08s. Processed 418 records at 4945.69 records/sec
+2026-01-11 11:10:57,157 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from upload: unknown
+2026-01-11 11:10:57,435 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 891 records from upload: unknown. Dataset ID: 0834803b-1ec4-4314-a76a-b094958bf162
+2026-01-11 11:10:57,435 - data_ingestion - INFO - log_performance_metrics:175 - Performance: upload_ingestion completed in 0.28s. Processed 891 records at 3200.90 records/sec
+2026-01-11 11:40:10,210 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://jsonplaceholder.typicode.com/posts
+2026-01-11 11:40:11,256 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api: https://jsonplaceholder.typicode.com/posts. Error: Failed to ingest from API: Unsupported response content type: <class 'list'>
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 82, in ingest
+    data = self._parse_response(response_data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 202, in _parse_response
+    raise IngestionError(f"Unsupported response content type: {type(content)}")
+ingestion.base_ingestor.IngestionError: Unsupported response content type: <class 'list'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: Unsupported response content type: <class 'list'>
+2026-01-11 11:40:23,527 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://jsonplaceholder.typicode.com/posts
+2026-01-11 11:40:24,606 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api: https://jsonplaceholder.typicode.com/posts. Error: Failed to ingest from API: Unsupported response content type: <class 'list'>
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 82, in ingest
+    data = self._parse_response(response_data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 202, in _parse_response
+    raise IngestionError(f"Unsupported response content type: {type(content)}")
+ingestion.base_ingestor.IngestionError: Unsupported response content type: <class 'list'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: Unsupported response content type: <class 'list'>
+2026-01-11 11:41:21,104 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://api.open-meteo.com/v1/forecast
+2026-01-11 11:41:22,822 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api: https://api.open-meteo.com/v1/forecast. Error: Failed to ingest from API: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\site-packages\requests\models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 140, in _make_request
+    'content': response.json() if 'application/json' in response.headers.get('content-type', '') else response.text
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\site-packages\requests\models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 79, in ingest
+    response_data = self._make_request()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 144, in _make_request
+    raise IngestionError(f"HTTP request failed: {str(e)}")
+ingestion.base_ingestor.IngestionError: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+2026-01-11 11:42:38,438 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://jsonplaceholder.typicode.com/posts
+2026-01-11 11:42:40,507 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api: https://jsonplaceholder.typicode.com/posts. Error: Failed to ingest from API: Unsupported response content type: <class 'list'>
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 82, in ingest
+    data = self._parse_response(response_data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 202, in _parse_response
+    raise IngestionError(f"Unsupported response content type: {type(content)}")
+ingestion.base_ingestor.IngestionError: Unsupported response content type: <class 'list'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: Unsupported response content type: <class 'list'>
+2026-01-11 11:45:39,413 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://api.open-meteo.com/v1/forecast
+2026-01-11 11:45:41,101 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api: https://api.open-meteo.com/v1/forecast. Error: Failed to ingest from API: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\site-packages\requests\models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 140, in _make_request
+    'content': response.json() if 'application/json' in response.headers.get('content-type', '') else response.text
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\site-packages\requests\models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 79, in ingest
+    response_data = self._make_request()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 144, in _make_request
+    raise IngestionError(f"HTTP request failed: {str(e)}")
+ingestion.base_ingestor.IngestionError: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+2026-01-11 11:46:00,260 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://jsonplaceholder.typicode.com/posts
+2026-01-11 11:46:02,290 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 100 records from api: https://jsonplaceholder.typicode.com/posts. Dataset ID: b23fa6ab-cc9c-45f3-8b34-d99b73d150ce
+2026-01-11 11:46:02,290 - data_ingestion - INFO - log_performance_metrics:175 - Performance: api_ingestion completed in 2.03s. Processed 100 records at 49.24 records/sec
+2026-01-11 11:48:42,803 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api: https://api.open-meteo.com/v1/forecast
+2026-01-11 11:48:43,915 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api: https://api.open-meteo.com/v1/forecast. Error: Failed to ingest from API: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\site-packages\requests\models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 140, in _make_request
+    'content': response.json() if 'application/json' in response.headers.get('content-type', '') else response.text
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\miniconda3\envs\sttfs\Lib\site-packages\requests\models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 79, in ingest
+    response_data = self._make_request()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 144, in _make_request
+    raise IngestionError(f"HTTP request failed: {str(e)}")
+ingestion.base_ingestor.IngestionError: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: HTTP request failed: Expecting value: line 1 column 1 (char 0)
+2026-01-11 11:50:05,805 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api:  https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true
+2026-01-11 11:50:05,807 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api:  https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true. Error: Failed to ingest from API: Invalid API configuration
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 76, in ingest
+    raise IngestionError("Invalid API configuration")
+ingestion.base_ingestor.IngestionError: Invalid API configuration
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: Invalid API configuration
+2026-01-11 11:51:24,230 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api:  https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true
+2026-01-11 11:51:24,241 - data_ingestion - ERROR - log_ingestion_error:130 - Failed to ingest from api:  https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true. Error: Failed to ingest from API: Invalid API configuration
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 76, in ingest
+    raise IngestionError("Invalid API configuration")
+ingestion.base_ingestor.IngestionError: Invalid API configuration
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\ingestion_registry.py", line 99, in ingest
+    dataset = ingestor.ingest()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\Desktop\datalab\ingestion\api_ingestor.py", line 114, in ingest
+    raise IngestionError(f"Failed to ingest from API: {str(e)}")
+ingestion.base_ingestor.IngestionError: Failed to ingest from API: Invalid API configuration
+2026-01-11 11:58:22,136 - data_ingestion - INFO - log_ingestion_attempt:95 - Starting ingestion from api:  https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true
+2026-01-11 11:58:23,447 - data_ingestion - INFO - log_ingestion_success:109 - Successfully ingested 1 records from api:  https://api.open-meteo.com/v1/forecast?latitude=31.63&longitude=-8.00&current_weather=true. Dataset ID: 8d40b3bd-e967-4e40-acd3-13cf5de8a535
+2026-01-11 11:58:23,449 - data_ingestion - INFO - log_performance_metrics:175 - Performance: api_ingestion completed in 1.31s. Processed 1 records at 0.76 records/sec

@@ -47,6 +47,11 @@ class APIIngestor(BaseIngestor):
         if not self.url:
             raise ValueError("url is required in config")
 
+        # Clean and ensure URL has protocol
+        self.url = self.url.strip()
+        if not self.url.startswith(('http://', 'https://')):
+            self.url = 'https://' + self.url
+
     def validate_config(self) -> bool:
         """Validate the API configuration."""
         if not self.url.startswith(('http://', 'https://')):
@@ -172,8 +177,14 @@ class APIIngestor(BaseIngestor):
         """Parse the API response into a DataFrame."""
         content = response_data['content']
 
-        # Handle JSON responses
-        if isinstance(content, dict):
+        # Handle JSON list responses (direct array)
+        if isinstance(content, list):
+            if self.json_path:
+                raise IngestionError("JSON path not supported for list responses")
+            return pd.DataFrame(content)
+
+        # Handle JSON dict responses
+        elif isinstance(content, dict):
             if self.json_path:
                 # Extract data from specific JSON path
                 data = self._extract_json_path(content, self.json_path)

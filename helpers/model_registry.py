@@ -21,6 +21,12 @@ from Models.Regression.RandomForestRegressor import RandomForestRegressorLab
 from Models.Regression.XgboostRegressor import XGBoostRegressor
 
 
+from Models.clustering.KMeansClusterer import KMeansClusterer
+from Models.clustering.DBSCANClusterer import DBSCANClusterer
+from Models.clustering.GMMClusterer import GMMClusterer
+from Models.clustering.AgglomerativeClusterer import AgglomerativeClusterer
+
+
 CLASSIFIERS = {
     "Logistic Regression": LogisticRegressionClassifier,
     "KNN": KNNClassifier,
@@ -48,11 +54,19 @@ REGRESSORS = {
 }
 
 
+CLUSTERERS = {
+    "K-Means": KMeansClusterer,
+    "DBSCAN": DBSCANClusterer,
+    "Gaussian Mixture": GMMClusterer,
+    "Agglomerative": AgglomerativeClusterer,
+}
+
+
 def get_available_models(problem_type: str):
     """Return available models mapping for a given problem type.
 
     Args:
-        problem_type: either 'classification' or 'regression'.
+        problem_type: either 'classification', 'regression', or 'clustering'.
 
     Returns:
         dict: mapping of model display names to model classes.
@@ -62,9 +76,12 @@ def get_available_models(problem_type: str):
         return CLASSIFIERS
     if pt == "regression":
         return REGRESSORS
-    # default: return both
+    if pt == "clustering":
+        return CLUSTERERS
+    # default: return all
     combined = {}
     combined.update(CLASSIFIERS)
     combined.update(REGRESSORS)
+    combined.update(CLUSTERERS)
     return combined
  

@@ -60,11 +60,17 @@ def show():
                         with col3:
                             if 'metrics' in model_info:
                                 if model_info['problem_type'] == 'regression':
-                                    st.metric("R² Score", f"{model_info['metrics'].get('R2', 'N/A'):.4f}")
+                                    score = model_info['metrics'].get('R2', 'N/A')
+                                    st.metric("R² Score", f"{score:.4f}" if isinstance(score, (int, float)) else score)
+                                elif model_info['problem_type'] == 'clustering':
+                                    score = model_info['metrics'].get('Silhouette', 'N/A')
+                                    st.metric("Silhouette", f"{score:.4f}" if isinstance(score, (int, float)) else score)
                                 else:
-                                    st.metric("Accuracy", f"{model_info['metrics'].get('Accuracy', 'N/A'):.4f}")
+                                    score = model_info['metrics'].get('Accuracy', 'N/A')
+                                    st.metric("Accuracy", f"{score:.4f}" if isinstance(score, (int, float)) else score)
                             else:
-                                st.metric("Score", f"{model_info.get('score', 'N/A'):.4f}")
+                                score = model_info.get('score', 'N/A')
+                                st.metric("Score", f"{score:.4f}" if isinstance(score, (int, float)) else score)
 
                         st.write(f"**Features:** {', '.join(model_info['features'])}")
 
@@ -109,15 +115,7 @@ def show():
 
                         st.success(f"✅ Successfully deployed {deployed_count} model(s)!")
 
-                        # Show export locations
-                        st.subheader("Export Locations")
-                        for model_name in selected_for_deployment:
-                            deployment_key = f"{deployment_name}_{model_name}"
-                            deployed_data = st.session_state.deployed_models.get(deployment_key)
-                            if deployed_data:
-                                with st.expander(f"📁 {model_name} Export Paths"):
-                                    for export_type, path in deployed_data['export_paths'].items():
-                                        st.code(f"{export_type.upper()}: {path}", language="text")
+                        
 
                     except Exception as e:
                         st.error(f"Deployment failed: {str(e)}")
@@ -162,9 +160,13 @@ def show():
                                 if 'metrics' in data['model_info'] and data['model_info']['metrics']:
                                     if problem_type == 'regression':
                                         score = data['model_info']['metrics'].get('R2', 'N/A')
+                                        st.metric("R² Score", f"{score:.4f}" if isinstance(score, (int, float)) else score)
+                                    elif problem_type == 'clustering':
+                                        score = data['model_info']['metrics'].get('Silhouette', 'N/A')
+                                        st.metric("Silhouette", f"{score:.4f}" if isinstance(score, (int, float)) else score)
                                     else:
                                         score = data['model_info']['metrics'].get('Accuracy', 'N/A')
-                                    st.metric("Score", f"{score:.4f}" if isinstance(score, (int, float)) else score)
+                                        st.metric("Accuracy", f"{score:.4f}" if isinstance(score, (int, float)) else score)
                                 else:
                                     st.metric("Score", "N/A")
 
