@@ -5,9 +5,8 @@ from modules import upload, visualization, preprocessing, training, deployment
 # Streamlit page config
 st.set_page_config(
     page_title="DataLab v0.1",
-  
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Professional Dashboard CSS
@@ -33,7 +32,7 @@ st.markdown("""
     }
     
     [data-testid="stSidebar"] > div:first-child {
-        padding-top: 1.5rem;
+        padding-top: 1rem;
     }
     
     /* Sidebar Header Section */
@@ -56,7 +55,7 @@ st.markdown("""
         display: block;
         font-size: 3rem;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.2rem;
         filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
     }
     
@@ -597,6 +596,9 @@ st.markdown("""
     
     /* Hide accidental second sidebar if rendered */
     [data-testid="stSidebar"]:nth-of-type(2) { display: none !important; }
+
+    /* Hide Streamlit header/top bar */
+    [data-testid="stHeader"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
 

@@ -40,6 +40,11 @@ def show():
 
             st.write(f"**Detected:** {len(numeric_cols)} numeric, {len(categorical_cols)} categorical columns")
 
+            # Initialize exclusion lists with defaults
+            exclude_from_scale = [col for col in numeric_cols if col == st.session_state.get('target_col')]
+            exclude_from_encode = []
+            exclude_from_missing = []
+
             # Preprocessing steps
             preprocessing_options = st.multiselect(
                 "Select preprocessing steps:",
@@ -126,6 +131,34 @@ def show():
                 categorical_cols = manual_categorical
                 st.success("Column types updated")
 
+        # Column exclusion section
+        with st.expander("Advanced: Exclude columns from preprocessing"):
+            st.write("""
+            Select columns that should NOT be preprocessed (e.g., target column, ID columns).
+            These columns will be included in the output but won't be scaled, encoded, or modified.
+            """)
+            
+            exclude_from_scale = st.multiselect(
+                "Exclude from scaling:",
+                options=numeric_cols,
+                default=exclude_from_scale,
+                help="These numeric columns won't be scaled"
+            )
+            
+            exclude_from_encode = st.multiselect(
+                "Exclude from encoding:",
+                options=categorical_cols,
+                default=exclude_from_encode,
+                help="These categorical columns won't be encoded"
+            )
+            
+            exclude_from_missing = st.multiselect(
+                "Exclude from missing value handling:",
+                options=df.columns.tolist(),
+                default=exclude_from_missing,
+                help="These columns won't have missing values imputed"
+            )
+
         # Apply preprocessing
         if st.button("Apply Preprocessing", type="primary"):
             if not preprocessing_options:
@@ -137,6 +170,14 @@ def show():
                     # Add column information to options
                     user_options["numeric_columns"] = numeric_cols
                     user_options["categorical_columns"] = categorical_cols
+                    user_options["exclude_from_scale"] = exclude_from_scale
+                    user_options["exclude_from_encode"] = exclude_from_encode
+                    user_options["exclude_from_missing"] = exclude_from_missing
+
+                    # Calculate actual columns to process (excluding the specified ones)
+                    numeric_to_scale = [col for col in numeric_cols if col not in exclude_from_scale]
+                    categorical_to_encode = [col for col in categorical_cols if col not in exclude_from_encode]
+                    columns_for_missing = [col for col in df.columns if col not in exclude_from_missing]
 
                     # Build config for PreprocessingAPI
                     api = PreprocessingAPI()
@@ -152,7 +193,10 @@ def show():
                         handle_missing=missing,
                         handle_outliers=None,
                         scale_numeric=user_options.get('scaler_type') if user_options.get('scaler_type') else None,
-                        encode_categorical=user_options.get('encoder_type') if user_options.get('encoder_type') else None
+                        encode_categorical=user_options.get('encoder_type') if user_options.get('encoder_type') else None,
+                        numeric_columns_to_scale=numeric_to_scale,
+                        categorical_columns_to_encode=categorical_to_encode,
+                        columns_to_handle_missing=columns_for_missing
                     )
 
                     with st.spinner("Applying preprocessing..."):

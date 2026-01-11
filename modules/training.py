@@ -61,18 +61,19 @@ def show():
 
                     # Classification criteria:
                     # 1. Low unique values (typically 2-20 classes)
-                    # 2. Categorical/object type
+                    # 2. Categorical/object type or integer numeric
                     # 3. Low cardinality ratio (much fewer unique values than samples)
 
                     if selected_target in numeric_cols:
-                        # For numeric columns, check unique value count
-                        # Low unique values -> classification, High unique values -> regression
-                        if unique_vals <= 20 and cardinality_ratio < 0.1:
+                        # For numeric columns, check if values are integers and unique value count
+                        # Integer with low unique values -> classification, otherwise -> regression
+                        is_integer = target_series.dtype == 'int64' or (target_series == target_series.astype(int)).all()
+                        if is_integer and unique_vals <= 20 and cardinality_ratio < 0.1:
                             st.session_state.problem_type = "classification"
-                            auto_msg = " (Auto-detected as classification - low unique numeric values)"
+                            auto_msg = " (Auto-detected as classification - discrete integer values)"
                         else:
                             st.session_state.problem_type = "regression"
-                            auto_msg = " (Auto-detected as regression - continuous numeric values)"
+                            auto_msg = " (Auto-detected as regression - continuous or many unique values)"
                     else:
                         # For categorical/object columns
                         if unique_vals <= 20:
@@ -183,6 +184,13 @@ def show():
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size/100, random_state=random_state
         )
+
+        # Basic validation for classification - only block obviously continuous targets
+        if st.session_state.problem_type == "classification":
+            # Only block if target is clearly float64 (continuous)
+            if y.dtype == 'float64':
+                st.error("The target column is continuous (float values). Please select 'Regression' as the problem type, use 'Auto-detect', or choose a different target column with discrete classes.")
+                return
 
     if st.button("🚀 Train Models", type="primary"):
         st.session_state.trained_models = {}

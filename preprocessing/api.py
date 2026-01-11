@@ -37,7 +37,11 @@ class PreprocessingAPI:
                                    handle_missing: str = 'mean',
                                    handle_outliers: Optional[str] = None,
                                    scale_numeric: str = 'standard',
-                                   encode_categorical: str = 'onehot') -> Dict[str, Any]:
+                                   encode_categorical: str = 'onehot',
+                                   numeric_columns_to_scale: Optional[list] = None,
+                                   categorical_columns_to_encode: Optional[list] = None,
+                                   columns_to_handle_missing: Optional[list] = None,
+                                   columns_to_handle_outliers: Optional[list] = None) -> Dict[str, Any]:
         """Create a preprocessing configuration.
 
         Args:
@@ -45,6 +49,10 @@ class PreprocessingAPI:
             handle_outliers: 'iqr'|'zscore'|None
             scale_numeric: 'standard'|'minmax'|'robust'|None
             encode_categorical: 'onehot'|'ordinal'|'label'|None
+            numeric_columns_to_scale: List of numeric columns to scale. If None, auto-detects.
+            categorical_columns_to_encode: List of categorical columns to encode. If None, auto-detects.
+            columns_to_handle_missing: List of columns to handle missing values. If None, applies to all.
+            columns_to_handle_outliers: List of columns to handle outliers. If None, applies to all.
 
         Returns:
             Configuration dict for passing to preprocess()
@@ -54,6 +62,10 @@ class PreprocessingAPI:
             'handle_outliers': handle_outliers,
             'scale_numeric': scale_numeric,
             'encode_categorical': encode_categorical,
+            'numeric_columns_to_scale': numeric_columns_to_scale,
+            'categorical_columns_to_encode': categorical_columns_to_encode,
+            'columns_to_handle_missing': columns_to_handle_missing,
+            'columns_to_handle_outliers': columns_to_handle_outliers,
         }
 
     def preprocess(self,
@@ -110,7 +122,12 @@ class PreprocessingAPI:
                                  input_shape=df.shape, output_shape=df.shape)
 
             # Detect feature types after initial cleaning
-            preprocessor = Preprocessor()
+            preprocessor = Preprocessor(
+                numeric_columns_to_scale=config.get('numeric_columns_to_scale'),
+                categorical_columns_to_encode=config.get('categorical_columns_to_encode'),
+                columns_to_handle_missing=config.get('columns_to_handle_missing'),
+                columns_to_handle_outliers=config.get('columns_to_handle_outliers')
+            )
             preprocessor.detect_feature_types(df, target_column=target_column)
 
             # 3. Categorical encoding
@@ -140,7 +157,7 @@ class PreprocessingAPI:
             preprocessor.missing_value_handler = missing_handler
             preprocessor.outlier_handler = outlier_handler
 
-            df_processed = preprocessor.fit_transform(df) if is_training else preprocessor.transform(df)
+            df_processed = preprocessor.fit_transform(df, target_column=target_column) if is_training else preprocessor.transform(df)
 
             # Update metadata with final output info
             metadata.set_output_data_info(df_processed)

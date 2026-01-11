@@ -16,12 +16,16 @@ class Preprocessor:
     Supports skipping preprocessing completely.
     """
 
-    def __init__(self, 
-                 numeric_transformers=None, 
-                 categorical_transformers=None, 
+    def __init__(self,
+                 numeric_transformers=None,
+                 categorical_transformers=None,
                  missing_value_handler=None,
                  outlier_handler=None,
-                 skip_preprocessing=False):
+                 skip_preprocessing=False,
+                 numeric_columns_to_scale=None,
+                 categorical_columns_to_encode=None,
+                 columns_to_handle_missing=None,
+                 columns_to_handle_outliers=None):
         self.numeric_transformers = numeric_transformers or []
         self.categorical_transformers = categorical_transformers or []
         self.missing_value_handler = missing_value_handler
@@ -31,30 +35,48 @@ class Preprocessor:
         self.numeric_features = []
         self.categorical_features = []
 
-    def detect_feature_types(self, df, target_column=None):
-        numeric = df.select_dtypes(include="number").columns.tolist()
-        categorical = df.select_dtypes(exclude="number").columns.tolist()
-        if target_column:
-            if target_column in numeric:
-                numeric.remove(target_column)
-            if target_column in categorical:
-                categorical.remove(target_column)
-        self.numeric_features = numeric
-        self.categorical_features = categorical
+        # User-specified columns
+        self.numeric_columns_to_scale = numeric_columns_to_scale or []
+        self.categorical_columns_to_encode = categorical_columns_to_encode or []
+        self.columns_to_handle_missing = columns_to_handle_missing or []
+        self.columns_to_handle_outliers = columns_to_handle_outliers or []
 
-    def fit(self, df):
+    def detect_feature_types(self, df, target_column=None):
+        # Use user-specified columns if provided, otherwise auto-detect
+        if self.numeric_columns_to_scale:
+            self.numeric_features = [col for col in self.numeric_columns_to_scale if col in df.columns]
+        else:
+            numeric = df.select_dtypes(include="number").columns.tolist()
+            if target_column and target_column in numeric:
+                numeric.remove(target_column)
+            self.numeric_features = numeric
+
+        if self.categorical_columns_to_encode:
+            self.categorical_features = [col for col in self.categorical_columns_to_encode if col in df.columns]
+        else:
+            categorical = df.select_dtypes(exclude="number").columns.tolist()
+            if target_column and target_column in categorical:
+                categorical.remove(target_column)
+            self.categorical_features = categorical
+
+    def fit(self, df, target_column=None):
         if self.skip_preprocessing:
             return  # do nothing
         # normalize column names
         df.columns = [str(c).strip().lower().replace(' ', '_') for c in df.columns]
 
         # detect features after normalization
-        self.detect_feature_types(df)
+        self.detect_feature_types(df, target_column=target_column)
 
         # missing values
         if self.missing_value_handler:
-            self.missing_value_handler.fit(df)
-            df = self.missing_value_handler.transform(df)
+            if self.columns_to_handle_missing:
+                # Fit on specified columns
+                self.missing_value_handler.fit(df[self.columns_to_handle_missing])
+                df[self.columns_to_handle_missing] = self.missing_value_handler.transform(df[self.columns_to_handle_missing])
+            else:
+                self.missing_value_handler.fit(df)
+                df = self.missing_value_handler.transform(df)
 
         # outliers
         if self.outlier_handler:
@@ -123,6 +145,10 @@ class Preprocessor:
             'outlier_handler': self.outlier_handler,
             'numeric_features': self.numeric_features,
             'categorical_features': self.categorical_features,
+            'numeric_columns_to_scale': self.numeric_columns_to_scale,
+            'categorical_columns_to_encode': self.categorical_columns_to_encode,
+            'columns_to_handle_missing': self.columns_to_handle_missing,
+            'columns_to_handle_outliers': self.columns_to_handle_outliers,
         }
         joblib.dump(to_save, path)
 
@@ -130,8 +156,8 @@ class Preprocessor:
     def load_pipeline(path):
         return joblib.load(path)
 
-    def fit_transform(self, df):
+    def fit_transform(self, df, target_column=None):
         if self.skip_preprocessing:
             return df  # return raw dataframe
-        self.fit(df)
+        self.fit(df, target_column=target_column)
         return self.transform(df)
